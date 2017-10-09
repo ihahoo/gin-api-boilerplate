@@ -94,6 +94,9 @@ $ make docker-image
 - [golint](https://github.com/golang/lint)为Go语言的Lint工具。详情请看官网。可以设置代码编辑器支持`golint`动态检测。
 - 主配置文件采用json格式，文件位置`data/config/app.json`，配置库使用了[viper](https://github.com/spf13/viper)，详情请查看官网。本项目里，封装到`lib/config`中。
 - 封装了[Logrus](https://github.com/sirupsen/logrus)库为日志工具，位置在`lib/log`
+- 日常开发，在`api/`下放置接口的函数或方法，在`routes/`下配置路由，一般按功能分不同文件分开。
+- `docker/development` 为开发环境docker-compose文件，`docker/staging`为测试环境docker-compose文件，`docker/production`为生产环境docker-compose文件。
+- 一般正式发布下只包含`data/`目录（存放配置文件、日志、数据库文件等作为docker数据卷加载），`bin/`目录（生成的可执行文件，启动服务），`docker-compose.yml`（启动docker)
 
 
 
