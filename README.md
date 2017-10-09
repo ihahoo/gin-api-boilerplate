@@ -96,7 +96,8 @@ $ make docker-image
 - 封装了[Logrus](https://github.com/sirupsen/logrus)库为日志工具，位置在`lib/log`
 - 日常开发，在`api/`下放置接口的函数或方法，在`routes/`下配置路由，一般按功能分不同文件分开。
 - `docker/development` 为开发环境docker-compose文件，`docker/staging`为测试环境docker-compose文件，`docker/production`为生产环境docker-compose文件。
-- 一般正式发布下只包含`data/`目录（存放配置文件、日志、数据库文件等作为docker数据卷加载），`bin/`目录（生成的可执行文件，启动服务），`docker-compose.yml`（启动docker)
+- 一般正式发布下服务器部署只包含`data/`目录（存放配置文件、日志、数据库文件等作为docker数据卷加载），`docker-compose.yml`（启动docker容器的编排文件)。
+- 一般正式发布下的docker镜像里的项目目录下，只有`Makefile`(make脚本)，`bin/`(编译过的可执行文件，启动服务的主执行文件)，`data/`(挂载的数据卷，存放配置文件、日志、数据库文件等)，部署出去的是编译好的可执行文件，相对安全独立。
 
 
 
