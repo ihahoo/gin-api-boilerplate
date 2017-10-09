@@ -1,0 +1,32 @@
+version: '2'
+services:
+  api:
+    build:
+      context: .
+      dockerfile: docker/development/Dockerfile
+    image: api-dev
+    command: make dev 
+    ports:
+      - 8080:3030
+    volumes:
+      - .:/go/src/gin-api-boilerplate
+    depends_on:
+      - db
+      - redis
+  db:
+    image: postgres:9.6-alpine
+    volumes:
+      - ./data/postgresql:/var/lib/postgresql/data/pgdata
+    ports:
+      - 5432:5432
+    environment:
+      POSTGRES_PASSWORD: SgQ6Vhc3u015xOL09se9
+      PGDATA: /var/lib/postgresql/data/pgdata
+  redis:
+    image: redis:4-alpine
+    volumes:
+      - ./data/config/redis.conf:/usr/local/etc/redis/redis.conf
+      - ./data/redis:/data
+    ports:
+      - 6379:6379
+    command: redis-server /usr/local/etc/redis/redis.conf

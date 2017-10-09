@@ -1,0 +1,32 @@
+version: '2'
+services:
+  api:
+    image: my-api:staging
+    container_name: my-api-staging 
+    command: make start
+    ports:
+      - 8080:8080
+    restart: always
+    volumes:
+      - ./data/config/app.json:/go/src/gin-api-boilerplate/data/config/app.json
+      - ./data/logs:/go/src/gin-api-boilerplate/data/logs
+    depends_on:
+      - db
+      - redis
+  db:
+    image: postgres:9.6-alpine
+    container_name: my-api-staging-db
+    restart: always
+    volumes:
+      - ./data/postgresql:/var/lib/postgresql/data/pgdata
+    environment:
+      POSTGRES_PASSWORD: SgQ6Vhc3u015xOL09se9
+      PGDATA: /var/lib/postgresql/data/pgdata
+  redis:
+    image: redis:4-alpine
+    container_name: my-api-staging-redis
+    restart: always
+    volumes:
+      - ./data/config/redis.conf:/usr/local/etc/redis/redis.conf
+      - ./data/redis:/data
+    command: redis-server /usr/local/etc/redis/redis.conf
