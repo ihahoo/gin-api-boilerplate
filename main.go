@@ -3,7 +3,7 @@ package main
 import (
 	"fmt"
 
-	"gin-api-boilerplate/config"
+	"gin-api-boilerplate/lib/config"
 	"gin-api-boilerplate/lib/log"
 	"gin-api-boilerplate/routes"
 
