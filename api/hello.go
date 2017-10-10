@@ -7,6 +7,6 @@ import (
 // Hello ...
 func Hello(c *gin.Context) {
 	c.JSON(200, gin.H{
-		"msg": "hello world!!!!!!!",
+		"msg": "hello world!",
 	})
 }
