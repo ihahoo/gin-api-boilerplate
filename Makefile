@@ -31,7 +31,7 @@ docker-build: clean
 docker-image: docker-build 
 	@docker build -t my-api:latest .
 
-docker-image-staging: clean
+docker-image-staging: docker-build 
 	@docker build -t my-api:staging .
 
 docker-image-dev:
