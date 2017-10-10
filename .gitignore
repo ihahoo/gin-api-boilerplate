@@ -1,6 +1,5 @@
 logs
 *.log
-vendor
 .DS_Store
 .vscode
 bin
