@@ -8,9 +8,8 @@
       "password": "SgQ6Vhc3u015xOL09se9",
       "host": "db",
       "port": 5432,
-      "database": "dbname",
-      "max": 100,
-      "idleTimeoutMillis": 1000
+      "dbname": "dbname",
+      "connectTimeout": 60
     }
   },
   "redis": {
