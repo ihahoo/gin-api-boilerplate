@@ -1,6 +1,6 @@
-FROM golang:1.9-alpine 
+FROM alpine:3.6
 
-ENV appdir /go/src/gin-api-boilerplate
+ENV appdir /app
 ARG port=8080
 
 RUN mkdir -p $appdir
