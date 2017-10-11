@@ -8,7 +8,7 @@
       "password": "SgQ6Vhc3u015xOL09se9",
       "host": "db",
       "port": 5432,
-      "dbname": "dbname",
+      "dbname": "postgres",
       "connectTimeout": 60
     }
   },
