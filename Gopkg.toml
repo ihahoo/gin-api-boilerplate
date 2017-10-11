@@ -36,3 +36,8 @@
 [[constraint]]
   branch = "master"
   name = "github.com/lib/pq"
+
+[[constraint]]
+  name = "github.com/go-redis/redis"
+  version = "6.7.1" 
+
