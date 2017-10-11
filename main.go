@@ -3,11 +3,11 @@ package main
 import (
 	"fmt"
 
-	"gin-api-boilerplate/lib/config"
-	"gin-api-boilerplate/lib/log"
 	"gin-api-boilerplate/routes"
 
 	"github.com/gin-gonic/gin"
+	"github.com/ihahoo/go-api-lib/config"
+	"github.com/ihahoo/go-api-lib/log"
 )
 
 // CORSMiddleware ...

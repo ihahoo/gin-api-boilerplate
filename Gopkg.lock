@@ -20,12 +20,6 @@
   version = "v1.2"
 
 [[projects]]
-  name = "github.com/go-redis/redis"
-  packages = [".","internal","internal/consistenthash","internal/hashtag","internal/pool","internal/proto"]
-  revision = "8e6b51ec3a92ec095dcbd2439c7a3eec6b6cb586"
-  version = "v6.7.1"
-
-[[projects]]
   branch = "master"
   name = "github.com/golang/protobuf"
   packages = ["proto"]
@@ -39,9 +33,9 @@
 
 [[projects]]
   branch = "master"
-  name = "github.com/lib/pq"
-  packages = [".","oid"]
-  revision = "b77235e3890a962fe8a6f8c4c7198679ca7814e7"
+  name = "github.com/ihahoo/go-api-lib"
+  packages = ["config","log"]
+  revision = "9d0cd652572361cbd28a009e7e2c552d7c6570f6"
 
 [[projects]]
   name = "github.com/magiconair/properties"
@@ -142,6 +136,6 @@
 [solve-meta]
   analyzer-name = "dep"
   analyzer-version = 1
-  inputs-digest = "37be997f3bfa557228596b05038315d3cb4b722bda799bc5587845f9f39ef65e"
+  inputs-digest = "c54dc82093747d1571793aa518401b6854bce4e45184afb3dcac4cee286e7e7e"
   solver-name = "gps-cdcl"
   solver-version = 1

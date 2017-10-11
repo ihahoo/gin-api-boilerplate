@@ -103,8 +103,9 @@ $ go get -d ./...
 - 本脚手架使用[gin](https://github.com/gin-gonic/gin)作为HTTP框架，使用方式请查看官网。也可以换成其它HTTP框架，使用方式类似。
 - 由于Go的习惯，`$GOPATH/src/gin-api-boilerplate`为本项目的目录，根据自己的项目情况，请修改项目名称和路径，然后相关`gin-api-boilerplate`名称的都需修改，包括代码中`import`部分，也使用了类似`gin-api-boilerplate/lib/log`这样的名称(Go对相对路径支持不是很好，所以只好使用这种带有包名称的路径)
 - [golint](https://github.com/golang/lint)为Go语言的Lint工具。详情请看官网。可以设置代码编辑器支持`golint`动态检测。
-- 主配置文件采用json格式，文件位置`data/config/app.json`，配置库使用了[viper](https://github.com/spf13/viper)，详情请查看官网。本项目里，封装到`lib/config`中。
-- 封装了[Logrus](https://github.com/sirupsen/logrus)库为日志工具，位置在`lib/log`
+- 一些配套工具比如配置文件、日志、数据库、reids等封装库，放到[go-api-lib](https://github.com/ihahoo/go-api-lib)，
+- 主配置文件采用json格式，文件位置`data/config/app.json`，配置库使用了[viper](https://github.com/spf13/viper)，详情请查看官网。
+- 封装了[Logrus](https://github.com/sirupsen/logrus)库为日志工具
 - 日常开发，在`api/`下放置接口的函数或方法，在`routes/`下配置路由，一般按功能分不同文件分开。
 - `docker/development` 为开发环境docker构建文件，`docker/staging`为测试环境docker-compose文件，`docker/production`为生产环境docker-compose文件。
 - 一般正式发布下服务器部署只包含`data/`目录（存放配置文件、日志、数据库文件等作为docker数据卷加载），`docker-compose.yml`（启动docker容器的编排文件)。
