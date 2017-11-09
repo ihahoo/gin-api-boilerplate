@@ -37,8 +37,7 @@ func Connect(prePath string) *sql.DB {
 
 	db, err := ConnectDB("dbname=" + dbname + " user=" + user + " password=" + password + " host=" + host + " port=" + port + " connect_timeout=" + connectTimeout + " sslmode=disable")
 	if err != nil {
-		logger := log.GetLog()
-		logger.WithFields(logger.Fields{"func": "db.Connect"}).Fatal(err)
+		log.GetLog().WithFields(log.Fields{"func": "db.Connect"}).Fatal(err)
 	}
 	return db
 }
