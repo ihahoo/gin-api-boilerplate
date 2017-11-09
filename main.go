@@ -8,6 +8,7 @@ import (
 	"github.com/gin-gonic/gin"
 	"github.com/ihahoo/go-api-lib/config"
 	"github.com/ihahoo/go-api-lib/log"
+	"github.com/ihahoo/go-api-lib/redis"
 )
 
 // CORSMiddleware ...
@@ -31,6 +32,12 @@ func CORSMiddleware() gin.HandlerFunc {
 func main() {
 	name := config.GetString("name")
 	port := config.GetString("port")
+
+	// 初始化默认redis db, 后面在使用的时候import "github.com/ihahoo/go-api-lib/redis" 通过redis.DB(0)调用实例
+	// 如果要初始化多个redis的db，则在这里添加，比如redis.Init(1)就建立了一个db 1的连接
+	// 如果不使用redis，则删除这里以及其它和redis相关的包引入
+	redis.Init(0)
+
 	r := gin.Default()
 	r.HandleMethodNotAllowed = true
 	r.Use(CORSMiddleware())

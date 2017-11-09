@@ -8,6 +8,9 @@ import (
 
 var log = logrus.New()
 
+// Fields Fields type
+type Fields = logrus.Fields
+
 func init() {
 	log.Formatter = &logrus.JSONFormatter{}
 	os.MkdirAll("data/logs/", 0777)

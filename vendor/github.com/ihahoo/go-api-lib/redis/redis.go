@@ -7,8 +7,33 @@ import (
 	"github.com/ihahoo/go-api-lib/log"
 )
 
-// Conn 连接redis
-func Conn(opt *redis.Options) (*redis.Client, error) {
+var dbs map[int]*redis.Client
+
+// Client Redis client
+type Client = redis.Client
+
+// Options ...
+type Options = redis.Options
+
+func init() {
+	dbs = make(map[int]*redis.Client)
+}
+
+// Init 初始化数据库
+func Init(db int) {
+	dbs[db] = Conn(db)
+}
+
+// DB 获取连接的实例
+func DB(db int) *redis.Client {
+	if v, ok := dbs[db]; ok {
+		return v
+	}
+	return nil
+}
+
+// ConnectDB 连接redis
+func ConnectDB(opt *redis.Options) (*redis.Client, error) {
 	client := redis.NewClient(opt)
 	_, err := client.Ping().Result()
 	if err != nil {
@@ -17,19 +42,24 @@ func Conn(opt *redis.Options) (*redis.Client, error) {
 	return client, nil
 }
 
-// Client 返回redis客户端
-func Client(db int) *redis.Client {
-	host := config.GetString("redis.host")
-	port := config.GetString("redis.port")
-	password := config.GetString("redis.password")
+// Connect 用配置文件连接数据库
+func Connect(db int, prePath string) *redis.Client {
+	host := config.GetString(prePath + "host")
+	port := config.GetString(prePath + "port")
+	password := config.GetString(prePath + "password")
 
-	client, err := Conn(&redis.Options{
+	client, err := ConnectDB(&redis.Options{
 		Addr:     host + ":" + port,
 		Password: password,
 		DB:       db,
 	})
 	if err != nil {
-		log.GetLog().Fatal(err)
+		log.GetLog().WithFields(log.Fields{"func": "redis.Connect"}).Fatal(err)
 	}
 	return client
+}
+
+// Conn 用配置文件的默认参数连接数据库
+func Conn(db int) *redis.Client {
+	return Connect(db, "redis.")
 }

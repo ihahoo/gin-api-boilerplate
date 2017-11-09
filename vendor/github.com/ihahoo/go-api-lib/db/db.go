@@ -7,24 +7,14 @@ import (
 	_ "github.com/lib/pq"
 )
 
-var db *sql.DB
+// Client 默认数据库实例
+var Client *sql.DB
 
 func init() {
-	user := config.GetString("db.options.user")
-	password := config.GetString("db.options.password")
-	host := config.GetString("db.options.host")
-	port := config.GetString("db.options.port")
-	dbname := config.GetString("db.options.dbname")
-	connectTimeout := config.GetString("db.options.connectTimeout")
-
-	dbIns, err := ConnectDB("dbname=" + dbname + " user=" + user + " password=" + password + " host=" + host + " port=" + port + " connect_timeout=" + connectTimeout + " sslmode=disable")
-	if err != nil {
-		log.GetLog().Fatal(err)
-	}
-	db = dbIns
+	Client = Conn()
 }
 
-// ConnectDB 连接数据库
+// ConnectDB 用连接字符串连接数据库
 func ConnectDB(dataSourceName string) (*sql.DB, error) {
 	db, err := sql.Open("postgres", dataSourceName)
 	if err != nil {
@@ -36,7 +26,24 @@ func ConnectDB(dataSourceName string) (*sql.DB, error) {
 	return db, nil
 }
 
-// GetDB 获得db客户端实例
-func Client() *sql.DB {
+// Connect 用配置文件连接数据库
+func Connect(prePath string) *sql.DB {
+	user := config.GetString(prePath + "user")
+	password := config.GetString(prePath + "password")
+	host := config.GetString(prePath + "host")
+	port := config.GetString(prePath + "port")
+	dbname := config.GetString(prePath + "dbname")
+	connectTimeout := config.GetString(prePath + "connectTimeout")
+
+	db, err := ConnectDB("dbname=" + dbname + " user=" + user + " password=" + password + " host=" + host + " port=" + port + " connect_timeout=" + connectTimeout + " sslmode=disable")
+	if err != nil {
+		logger := log.GetLog()
+		logger.WithFields(logger.Fields{"func": "db.Connect"}).Fatal(err)
+	}
 	return db
+}
+
+// Conn 用配置文件的默认参数连接数据库
+func Conn() *sql.DB {
+	return Connect("db.options.")
 }
