@@ -40,8 +40,8 @@
 [[projects]]
   name = "github.com/ihahoo/go-api-lib"
   packages = ["config","log","redis"]
-  revision = "a1dbbeed2f2e93b95c7034ec223a88837a3c2f33"
-  version = "v0.1.10"
+  revision = "79adb65c8fabe77264153fd2ee6619697d0d27a4"
+  version = "v0.1.11"
 
 [[projects]]
   name = "github.com/magiconair/properties"
@@ -142,6 +142,6 @@
 [solve-meta]
   analyzer-name = "dep"
   analyzer-version = 1
-  inputs-digest = "844c52e004dd8e2ff54e95a81258f23ce1351fecc6bc86d1e032ba5eb62b89c9"
+  inputs-digest = "414bf8c0e96794bd4c8cb9e3d890a2016ebcc5a02686f806f6180df104a5d3bd"
   solver-name = "gps-cdcl"
   solver-version = 1
