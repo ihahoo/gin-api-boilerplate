@@ -433,6 +433,13 @@ type Termios struct {
 	Ospeed int32
 }
 
+type Winsize struct {
+	Row    uint16
+	Col    uint16
+	Xpixel uint16
+	Ypixel uint16
+}
+
 const (
 	AT_FDCWD            = -0x64
 	AT_SYMLINK_NOFOLLOW = 0x2
@@ -456,3 +463,11 @@ const (
 	POLLWRBAND = 0x100
 	POLLWRNORM = 0x4
 )
+
+type Utsname struct {
+	Sysname  [256]byte
+	Nodename [256]byte
+	Release  [256]byte
+	Version  [256]byte
+	Machine  [256]byte
+}

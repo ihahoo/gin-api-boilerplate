@@ -31,7 +31,7 @@
 
 [[constraint]]
   name = "github.com/sirupsen/logrus"
-  version = "1.0.3"
+  version = "1.0.4"
 
 [[constraint]]
   branch = "master"
@@ -39,8 +39,8 @@
 
 [[constraint]]
   name = "github.com/go-redis/redis"
-  version = "6.7.3" 
+  version = "6.7.4" 
 
 [[constraint]]
   name = "github.com/ihahoo/go-api-lib"
-  version = "0.1.11" 
+  version = "0.1.12" 

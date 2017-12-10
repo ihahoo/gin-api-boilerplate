@@ -10,7 +10,8 @@ import (
 // Client 默认数据库实例
 var Client *sql.DB
 
-func init() {
+// Init 默认初始化
+func Init() {
 	Client = Conn()
 }
 

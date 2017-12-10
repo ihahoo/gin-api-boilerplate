@@ -31,7 +31,7 @@ Rich Feature Set includes:
 
   - Simple but extremely powerful and feature-rich API
   - Support for go1.4 and above, while selectively using newer APIs for later releases
-  - Good code coverage ( > 70% )
+  - Excellent code coverage ( > 90% )
   - Very High Performance.
     Our extensive benchmarks show us outperforming Gob, Json, Bson, etc by 2-4X.
   - Careful selected use of 'unsafe' for targeted performance gains.
@@ -52,6 +52,8 @@ Rich Feature Set includes:
     Includes Options to configure what specific map or slice type to use
     when decoding an encoded list or map into a nil interface{}
   - Encode a struct as an array, and decode struct from an array in the data stream
+  - Option to encode struct keys as numbers (instead of strings)
+    (to support structured streams with fields encoded as numeric codes)
   - Comprehensive support for anonymous fields
   - Fast (no-reflection) encoding/decoding of common maps and slices
   - Code-generation for faster performance.
@@ -107,7 +109,7 @@ This symmetry is important to reduce chances of issues happening because the
 encoding and decoding sides are out of sync e.g. decoded via very specific
 encoding.TextUnmarshaler but encoded via kind-specific generalized mode.
 
-Consequently, if a type only defines one-half of the symetry
+Consequently, if a type only defines one-half of the symmetry
 (e.g. it implements UnmarshalJSON() but not MarshalJSON() ),
 then that type doesn't satisfy the check and we will continue walking down the
 decision tree.
@@ -185,3 +187,17 @@ You can run the tag 'safe' to run tests or build in safe mode. e.g.
 
 Please see http://github.com/ugorji/go-codec-bench .
 
+## Caveats
+
+Struct fields matching the following are ignored during encoding and decoding
+
+  - struct tag value set to -
+  - func, complex numbers, unsafe pointers
+  - unexported and not embedded
+  - unexported embedded non-struct
+  - unexported embedded pointers (from go1.10)
+
+Every other field in a struct will be encoded/decoded.
+
+Embedded fields are encoded as if they exist in the top-level struct,
+with some caveats. See Encode documentation.

@@ -8,6 +8,7 @@ package codec
 import (
 	"reflect"
 	"sync/atomic"
+	"time"
 )
 
 const safeMode = true
@@ -69,11 +70,15 @@ func rv2rtid(rv reflect.Value) uintptr {
 	return reflect.ValueOf(rv.Type()).Pointer()
 }
 
+func i2rtid(i interface{}) uintptr {
+	return reflect.ValueOf(reflect.TypeOf(i)).Pointer()
+}
+
 // --------------------------
 // type ptrToRvMap struct{}
 
-// func (_ *ptrToRvMap) init() {}
-// func (_ *ptrToRvMap) get(i interface{}) reflect.Value {
+// func (*ptrToRvMap) init() {}
+// func (*ptrToRvMap) get(i interface{}) reflect.Value {
 // 	return reflect.ValueOf(i).Elem()
 // }
 
@@ -107,12 +112,20 @@ func (d *Decoder) kBool(f *codecFnInfo, rv reflect.Value) {
 	rv.SetBool(d.d.DecodeBool())
 }
 
+func (d *Decoder) kTime(f *codecFnInfo, rv reflect.Value) {
+	rv.Set(reflect.ValueOf(d.d.DecodeTime()))
+}
+
 func (d *Decoder) kFloat32(f *codecFnInfo, rv reflect.Value) {
-	rv.SetFloat(d.d.DecodeFloat(true))
+	fv := d.d.DecodeFloat64()
+	if chkOvf.Float32(fv) {
+		d.errorf("float32 overflow: %v", fv)
+	}
+	rv.SetFloat(fv)
 }
 
 func (d *Decoder) kFloat64(f *codecFnInfo, rv reflect.Value) {
-	rv.SetFloat(d.d.DecodeFloat(false))
+	rv.SetFloat(d.d.DecodeFloat64())
 }
 
 func (d *Decoder) kInt(f *codecFnInfo, rv reflect.Value) {
@@ -165,8 +178,12 @@ func (e *Encoder) kBool(f *codecFnInfo, rv reflect.Value) {
 	e.e.EncodeBool(rv.Bool())
 }
 
+func (e *Encoder) kTime(f *codecFnInfo, rv reflect.Value) {
+	e.e.EncodeTime(rv2i(rv).(time.Time))
+}
+
 func (e *Encoder) kString(f *codecFnInfo, rv reflect.Value) {
-	e.e.EncodeString(c_UTF8, rv.String())
+	e.e.EncodeString(cUTF8, rv.String())
 }
 
 func (e *Encoder) kFloat64(f *codecFnInfo, rv reflect.Value) {
