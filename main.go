@@ -7,6 +7,7 @@ import (
 
 	"github.com/gin-gonic/gin"
 	"github.com/ihahoo/go-api-lib/config"
+	"github.com/ihahoo/go-api-lib/dbx"
 	"github.com/ihahoo/go-api-lib/log"
 	"github.com/ihahoo/go-api-lib/redis"
 )
@@ -37,6 +38,9 @@ func main() {
 	// 如果要初始化多个redis的db，则在这里添加，比如redis.Init(1)就建立了一个db 1的连接
 	// 如果不使用redis，则删除这里以及其它和redis相关的包引入
 	redis.Init(0)
+
+	// 初始化数据库
+	dbx.Init()
 
 	r := gin.Default()
 	r.HandleMethodNotAllowed = true
