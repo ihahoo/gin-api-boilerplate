@@ -40,7 +40,7 @@ func main() {
 	redis.Init(0)
 
 	// 初始化数据库
-	dbx.Init()
+	db.Init()
 
 	r := gin.Default()
 	r.HandleMethodNotAllowed = true
