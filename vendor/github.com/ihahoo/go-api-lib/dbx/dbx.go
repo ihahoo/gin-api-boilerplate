@@ -7,12 +7,31 @@ import (
 	_ "github.com/lib/pq"
 )
 
+var dbs map[string]*sqlx.DB
+
 // Client 默认数据库实例
 var Client *sqlx.DB
+
+func init() {
+	dbs = make(map[string]*sqlx.DB)
+}
 
 // Init 默认初始化
 func Init() {
 	Client = Conn()
+}
+
+// SetClient 设置数据库连接实例
+func SetClient(name string, client *sqlx.DB) {
+	dbs[name] = client
+}
+
+// C 获取连接的实例
+func C(name string) *sqlx.DB {
+	if v, ok := dbs[name]; ok {
+		return v
+	}
+	return nil
 }
 
 // ConnectDB 用连接字符串连接数据库

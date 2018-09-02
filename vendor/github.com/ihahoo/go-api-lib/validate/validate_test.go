@@ -38,6 +38,10 @@ func TestEmail(t *testing.T) {
 	test3, ok3 := Email("test123@abc.com", true, "Email")
 	assert.Equal(t, ok3, true, "Email格式应该正确")
 	assert.Equal(t, test3, errors.E{}, "Email格式正确, 不应有错误信息返回")
+
+	test4, ok4 := Email("", false, "Email")
+	assert.Equal(t, ok4, true, "Email格式应该正确")
+	assert.Equal(t, test4, errors.E{}, "Email格式正确, 不应有错误信息返回")
 }
 
 func TestMinLength(t *testing.T) {

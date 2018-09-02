@@ -48,8 +48,10 @@ func Email(v string, isRequired bool, name string) (errors.E, bool) {
 			return info, false
 		}
 	}
-	if !valid.IsEmail(v) {
-		return errors.E{422, 400004, name + "格式不正确"}, false
+	if len(v) > 0 {
+		if !valid.IsEmail(v) {
+			return errors.E{422, 400004, name + "格式不正确"}, false
+		}
 	}
 
 	return errors.E{}, true
@@ -71,9 +73,11 @@ func Mobile(v string, isRequired bool, name string) (errors.E, bool) {
 			return info, false
 		}
 	}
-	rxMobile := regexp.MustCompile("^(\\+?0?86\\-?)?1[345789]\\d{9}$")
-	if !rxMobile.MatchString(v) {
-		return errors.E{422, 400021, name + "错误"}, false
+	if len(v) > 0 {
+		rxMobile := regexp.MustCompile("^(\\+?0?86\\-?)?1[345789]\\d{9}$")
+		if !rxMobile.MatchString(v) {
+			return errors.E{422, 400021, name + "错误"}, false
+		}
 	}
 
 	return errors.E{}, true
@@ -86,8 +90,10 @@ func UUID(v string, isRequired bool, name string) (errors.E, bool) {
 			return info, false
 		}
 	}
-	if !valid.IsUUID(v) {
-		return errors.E{422, 400002, name + "格式错误"}, false
+	if len(v) > 0 {
+		if !valid.IsUUID(v) {
+			return errors.E{422, 400002, name + "格式错误"}, false
+		}
 	}
 
 	return errors.E{}, true
@@ -100,9 +106,11 @@ func RealName(v string, isRequired bool, name string) (errors.E, bool) {
 			return info, false
 		}
 	}
-	rxRealName := regexp.MustCompile("^[\u2E80-\uFE4F]{2,10}$")
-	if !rxRealName.MatchString(v) {
-		return errors.E{422, 400002, name + "格式错误"}, false
+	if len(v) > 0 {
+		rxRealName := regexp.MustCompile("^[\u2E80-\uFE4F]{2,10}$")
+		if !rxRealName.MatchString(v) {
+			return errors.E{422, 400002, name + "格式错误"}, false
+		}
 	}
 
 	return errors.E{}, true
@@ -115,9 +123,11 @@ func IDCard(v string, isRequired bool, name string) (errors.E, bool) {
 			return info, false
 		}
 	}
-	rxIDCard := regexp.MustCompile("(^\\d{18}$)|(^\\d{17}(\\d|X|x)$)")
-	if !rxIDCard.MatchString(v) {
-		return errors.E{422, 400002, name + "格式错误"}, false
+	if len(v) > 0 {
+		rxIDCard := regexp.MustCompile("(^\\d{18}$)|(^\\d{17}(\\d|X|x)$)")
+		if !rxIDCard.MatchString(v) {
+			return errors.E{422, 400002, name + "格式错误"}, false
+		}
 	}
 
 	return errors.E{}, true
@@ -130,9 +140,11 @@ func MD5(v string, isRequired bool, name string) (errors.E, bool) {
 			return info, false
 		}
 	}
-	rxMD5 := regexp.MustCompile("^[a-f0-9]{32}$")
-	if !rxMD5.MatchString(v) {
-		return errors.E{422, 400002, name + "格式错误"}, false
+	if len(v) > 0 {
+		rxMD5 := regexp.MustCompile("^[a-f0-9]{32}$")
+		if !rxMD5.MatchString(v) {
+			return errors.E{422, 400002, name + "格式错误"}, false
+		}
 	}
 
 	return errors.E{}, true
