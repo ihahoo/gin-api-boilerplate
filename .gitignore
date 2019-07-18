@@ -6,3 +6,4 @@ bin
 gin-bin
 data/redis
 data/postgresql
+tmp
