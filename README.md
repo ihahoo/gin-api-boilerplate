@@ -76,7 +76,7 @@ $ make docker-image
 ````
 
 ## 包依赖管理
-包依赖管理使用[Go Modules](https://github.com/golang/go/wiki/Modules)，通过`go mod vendor`可以把当前项目的依赖模块安装到`vendor`目录下，使用Dep需要Go 1.11版本以上。
+包依赖管理使用[Go Modules](https://github.com/golang/go/wiki/Modules)，通过`go mod vendor`可以把当前项目的依赖模块安装到`vendor`目录下，使用Go Modules需要Go 1.11版本以上。
 
 本项目将`vendor`加入到git版本控制中，主要是因为一些包在国内会被屏蔽，另外做自动化构建和部署的时候，外部依赖包都在`vendor`中了，比较方便。
 
