@@ -7,14 +7,14 @@ services:
     image: api-dev
     command: make dev 
     ports:
-      - 8080:3030
+      - 8080:8080
     volumes:
       - .:/go/src/gin-api-boilerplate
     depends_on:
       - db
       - redis
   db:
-    image: postgres:9.6-alpine
+    image: postgres:10-alpine
     volumes:
       - ./data/postgresql:/var/lib/postgresql/data/pgdata
     ports:

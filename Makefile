@@ -8,7 +8,7 @@ start:
 	@GIN_MODE=release ./bin/$(GONAME) 
 
 build:
-	@go build -o bin/$(GONAME) 
+	@go build -mod vendor -o bin/$(GONAME) 
 
 run:
 	@./bin/$(GONAME) 
@@ -23,7 +23,7 @@ doc:
 	godoc -http=:6060 -index
 
 dev:
-	@gin -a 8080 -p 3030 run main.go
+	@fresh
 
 docker-build: clean
 	@docker-compose -f docker/development/docker-compose.yml run --rm api make build
@@ -35,7 +35,7 @@ docker-image-staging: docker-build
 	@docker build -t my-api:staging .
 
 docker-image-dev:
-	@docker-compose -f docker/development/docker-compose.yml run --rm api dep ensure -v
+	@docker-compose -f docker/development/docker-compose.yml run --rm
 
 start-docker-dev:
 	@docker-compose up -d

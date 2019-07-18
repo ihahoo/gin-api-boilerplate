@@ -1,4 +1,4 @@
-FROM alpine:3.6
+FROM alpine:3.10
 
 ENV appdir /app
 ARG port=8080
@@ -10,8 +10,7 @@ ADD Makefile .
 ADD ./bin ./bin
 ADD ./data/config/app.json ./data/config/app.json
 
-RUN echo http://mirrors.aliyun.com/alpine/v3.6/main > /etc/apk/repositories \
-    && echo http://mirrors.aliyun.com/alpine/v3.6/main >> /etc/apk/repositories \
+RUN echo https://mirrors.tuna.tsinghua.edu.cn/alpine/v3.10/main > /etc/apk/repositories \
     && apk add --no-cache make
 
 EXPOSE $port
