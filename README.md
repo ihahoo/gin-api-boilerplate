@@ -1,24 +1,25 @@
 # gin-api-boilerplate
 A Go RESTful API server with gin and docker
 
+> 使用go 1.11起自带的 `go mod` 做包管理，不再使用`Dep`。新版go语言，项目目录可以不用在$GOPATH中了。不再使用`codegangsta/gin`，使用`fresh`为自动重新启动服务工具。
+
 ## 安装
-安装最新的[Go](https://golang.org/)，设置好`$GOPATH`，将`$GOPATH/bin`设置为可执行PATH。这里使用的是Mac或者Linux环境。
+安装最新的[Go](https://golang.org/)
 
 ````
-$ cd $GOPATH/src
 $ git clone https://github.com/ihahoo/gin-api-boilerplate.git
 ````
 
 ## 启动开发环境
-安装自动重新启动服务工具[codegangsta/gin](https://github.com/codegangsta/gin)，这样在开发过程中，修改保存了文件后，会自动重启web服务。(注：此gin不是http框架的gin，名称一样)。建议用docker环境开发和部署，下面构建的docker镜像，会安装此脚本。
+安装自动重新启动服务工具[fresh](https://github.com/gravityblast/fresh)，这样在开发过程中，修改保存了文件后，会自动重启web服务。建议用docker环境开发和部署，下面构建的docker镜像，会安装此脚本。
 ```
-$ go get github.com/codegangsta/gin
+$ go get github.com/pilu/fresh
 ```
 启动服务：
 ```
 $ make dev
 ```
-测试服务：`http://localhost:3030/hello`
+测试服务：`http://localhost:8080/hello`
 
 ## 构建和启动正式环境
 ```
@@ -75,33 +76,12 @@ $ make docker-image
 ````
 
 ## 包依赖管理
-包依赖管理使用[Dep](https://github.com/golang/dep)，可以把当前项目的依赖模块安装到`vendor`目录下，使用Dep需要Go 1.8版本以上。具体[Dep](https://github.com/golang/dep)的使用请查看官网。
+包依赖管理使用[Go Modules](https://github.com/golang/go/wiki/Modules)，通过`go mod vendor`可以把当前项目的依赖模块安装到`vendor`目录下，使用Dep需要Go 1.11版本以上。
 
 本项目将`vendor`加入到git版本控制中，主要是因为一些包在国内会被屏蔽，另外做自动化构建和部署的时候，外部依赖包都在`vendor`中了，比较方便。
 
-引用了外部的依赖，请使用Dep来添加或者检查，将新的引用的包安装到`vendor`中，方便编译。
-### 安装Dep
-```
-$ go get -u github.com/golang/dep/cmd/dep
-```
-### 初始化或检查依赖:
-```
-$ dep ensure -v
-```
-### 添加依赖
-```
-$ dep ensure -add github.com/foo/bar
-```
-
-### go get
-如果不使用`Dep`，也可以使用下面命令安装全部依赖，但不是默认安装到`vendor`下。（默认已经将vendor放到版本控制了，所以默认不用先安装依赖)
-```
-$ go get -d ./...
-```
-
 ## 注意
 - 本脚手架使用[gin](https://github.com/gin-gonic/gin)作为HTTP框架，使用方式请查看官网。也可以换成其它HTTP框架，使用方式类似。
-- 由于Go的习惯，`$GOPATH/src/gin-api-boilerplate`为本项目的目录，根据自己的项目情况，请修改项目名称和路径，然后相关`gin-api-boilerplate`名称的都需修改，包括代码中`import`部分，也使用了类似`gin-api-boilerplate/lib/log`这样的名称(Go对相对路径支持不是很好，所以只好使用这种带有包名称的路径)
 - [golint](https://github.com/golang/lint)为Go语言的Lint工具。详情请看官网。可以设置代码编辑器支持`golint`动态检测。
 - 一些配套工具比如配置文件、日志、数据库、reids等封装库，放到[go-api-lib](https://github.com/ihahoo/go-api-lib)，
 - 主配置文件采用json格式，文件位置`data/config/app.json`，配置库使用了[viper](https://github.com/spf13/viper)，详情请查看官网。

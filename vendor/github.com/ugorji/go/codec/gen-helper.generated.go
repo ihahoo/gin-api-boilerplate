@@ -1,6 +1,6 @@
-/* // +build ignore */
+// comment this out // + build ignore
 
-// Copyright (c) 2012-2015 Ugorji Nwoke. All rights reserved.
+// Copyright (c) 2012-2018 Ugorji Nwoke. All rights reserved.
 // Use of this source code is governed by a MIT license found in the LICENSE file.
 
 // Code generated from gen-helper.go.tmpl - DO NOT EDIT.
@@ -13,7 +13,7 @@ import (
 )
 
 // GenVersion is the current version of codecgen.
-const GenVersion = 8
+const GenVersion = 10
 
 // This file is used to generate helper code for codecgen.
 // The values here i.e. genHelper(En|De)coder are not to be used directly by
@@ -25,22 +25,50 @@ const GenVersion = 8
 // When static codecs are created for types, they will use this value
 // to perform encoding or decoding of primitives or known slice or map types.
 
+// GenHelperEncoder is exported so that it can be used externally by codecgen.
+//
+// Library users: DO NOT USE IT DIRECTLY. IT WILL CHANGE CONTINOUSLY WITHOUT NOTICE.
+func GenHelperEncoder(e *Encoder) (ge genHelperEncoder, ee genHelperEncDriver) {
+	ge = genHelperEncoder{e: e}
+	ee = genHelperEncDriver{encDriver: e.e}
+	return
+}
+
+// GenHelperDecoder is exported so that it can be used externally by codecgen.
+//
+// Library users: DO NOT USE IT DIRECTLY. IT WILL CHANGE CONTINOUSLY WITHOUT NOTICE.
+func GenHelperDecoder(d *Decoder) (gd genHelperDecoder, dd genHelperDecDriver) {
+	gd = genHelperDecoder{d: d}
+	dd = genHelperDecDriver{decDriver: d.d}
+	return
+}
+
 type genHelperEncDriver struct {
 	encDriver
 }
 
 func (x genHelperEncDriver) EncodeBuiltin(rt uintptr, v interface{}) {}
 func (x genHelperEncDriver) EncStructFieldKey(keyType valueType, s string) {
-	encStructFieldKey(x.encDriver, keyType, s, false)
+	encStructFieldKey(s, x.encDriver, nil, keyType, false, false)
+}
+func (x genHelperEncDriver) EncodeSymbol(s string) {
+	x.encDriver.EncodeStringEnc(cUTF8, s)
 }
 
 type genHelperDecDriver struct {
 	decDriver
+	C checkOverflow
 }
 
 func (x genHelperDecDriver) DecodeBuiltin(rt uintptr, v interface{}) {}
-func (x genHelperDecDriver) DecStructFieldKey(keyType valueType, buf *[scratchByteArrayLen]byte) []byte {
+func (x genHelperDecDriver) DecStructFieldKey(keyType valueType, buf *[decScratchByteArrayLen]byte) []byte {
 	return decStructFieldKey(x.decDriver, keyType, buf)
+}
+func (x genHelperDecDriver) DecodeInt(bitsize uint8) (i int64) {
+	return x.C.IntV(x.decDriver.DecodeInt64(), bitsize)
+}
+func (x genHelperDecDriver) DecodeUint(bitsize uint8) (ui uint64) {
+	return x.C.UintV(x.decDriver.DecodeUint64(), bitsize)
 }
 func (x genHelperDecDriver) DecodeFloat(chkOverflow32 bool) (f float64) {
 	f = x.DecodeFloat64()
@@ -57,32 +85,16 @@ func (x genHelperDecDriver) DecodeFloat32As64() (f float64) {
 	return
 }
 
-// GenHelperEncoder is exported so that it can be used externally by codecgen.
-//
-// Library users: DO NOT USE IT DIRECTLY. IT WILL CHANGE CONTINOUSLY WITHOUT NOTICE.
-func GenHelperEncoder(e *Encoder) (ge genHelperEncoder, ee genHelperEncDriver) {
-	ge = genHelperEncoder{e: e}
-	ee = genHelperEncDriver{e.e}
-	return
-}
-
-// GenHelperDecoder is exported so that it can be used externally by codecgen.
-//
-// Library users: DO NOT USE IT DIRECTLY. IT WILL CHANGE CONTINOUSLY WITHOUT NOTICE.
-func GenHelperDecoder(d *Decoder) (gd genHelperDecoder, dd genHelperDecDriver) {
-	gd = genHelperDecoder{d: d}
-	dd = genHelperDecDriver{d.d}
-	return
-}
-
 // FOR USE BY CODECGEN ONLY. IT *WILL* CHANGE WITHOUT NOTICE. *DO NOT USE*
 type genHelperEncoder struct {
+	M must
 	e *Encoder
 	F fastpathT
 }
 
 // FOR USE BY CODECGEN ONLY. IT *WILL* CHANGE WITHOUT NOTICE. *DO NOT USE*
 type genHelperDecoder struct {
+	C checkOverflow
 	d *Decoder
 	F fastpathT
 }
@@ -94,7 +106,12 @@ func (f genHelperEncoder) EncBasicHandle() *BasicHandle {
 
 // FOR USE BY CODECGEN ONLY. IT *WILL* CHANGE WITHOUT NOTICE. *DO NOT USE*
 func (f genHelperEncoder) EncBinary() bool {
-	return f.e.cf.be // f.e.hh.isBinaryEncoding()
+	return f.e.be // f.e.hh.isBinaryEncoding()
+}
+
+// FOR USE BY CODECGEN ONLY. IT *WILL* CHANGE WITHOUT NOTICE. *DO NOT USE*
+func (f genHelperEncoder) IsJSONHandle() bool {
+	return f.e.js
 }
 
 // FOR USE BY CODECGEN ONLY. IT *WILL* CHANGE WITHOUT NOTICE. *DO NOT USE*
@@ -107,19 +124,19 @@ func (f genHelperEncoder) EncFallback(iv interface{}) {
 // FOR USE BY CODECGEN ONLY. IT *WILL* CHANGE WITHOUT NOTICE. *DO NOT USE*
 func (f genHelperEncoder) EncTextMarshal(iv encoding.TextMarshaler) {
 	bs, fnerr := iv.MarshalText()
-	f.e.marshal(bs, fnerr, false, cUTF8)
+	f.e.marshalUtf8(bs, fnerr)
 }
 
 // FOR USE BY CODECGEN ONLY. IT *WILL* CHANGE WITHOUT NOTICE. *DO NOT USE*
 func (f genHelperEncoder) EncJSONMarshal(iv jsonMarshaler) {
 	bs, fnerr := iv.MarshalJSON()
-	f.e.marshal(bs, fnerr, true, cUTF8)
+	f.e.marshalAsis(bs, fnerr)
 }
 
 // FOR USE BY CODECGEN ONLY. IT *WILL* CHANGE WITHOUT NOTICE. *DO NOT USE*
 func (f genHelperEncoder) EncBinaryMarshal(iv encoding.BinaryMarshaler) {
 	bs, fnerr := iv.MarshalBinary()
-	f.e.marshal(bs, fnerr, false, cRAW)
+	f.e.marshalRaw(bs, fnerr)
 }
 
 // FOR USE BY CODECGEN ONLY. IT *WILL* CHANGE WITHOUT NOTICE. *DO NOT USE*
@@ -138,11 +155,6 @@ func (f genHelperEncoder) TimeRtidIfBinc() (v uintptr) { return }
 // }
 
 // FOR USE BY CODECGEN ONLY. IT *WILL* CHANGE WITHOUT NOTICE. *DO NOT USE*
-func (f genHelperEncoder) IsJSONHandle() bool {
-	return f.e.cf.js
-}
-
-// FOR USE BY CODECGEN ONLY. IT *WILL* CHANGE WITHOUT NOTICE. *DO NOT USE*
 func (f genHelperEncoder) I2Rtid(v interface{}) uintptr {
 	return i2rtid(v)
 }
@@ -156,6 +168,14 @@ func (f genHelperEncoder) Extension(rtid uintptr) (xfn *extTypeTagFn) {
 func (f genHelperEncoder) EncExtension(v interface{}, xfFn *extTypeTagFn) {
 	f.e.e.EncodeExt(v, xfFn.tag, xfFn.ext, f.e)
 }
+
+// FOR USE BY CODECGEN ONLY. IT *WILL* CHANGE WITHOUT NOTICE. *DO NOT USE*
+func (f genHelperEncoder) WriteStr(s string) {
+	f.e.w.writestr(s)
+}
+
+// FOR USE BY CODECGEN ONLY. IT *WILL* CHANGE WITHOUT NOTICE. *DO NOT USE*
+func (f genHelperEncoder) BytesView(v string) []byte { return bytesView(v) }
 
 // FOR USE BY CODECGEN ONLY. IT *WILL* CHANGE WITHOUT NOTICE. *DO NOT USE*
 //
@@ -198,7 +218,7 @@ func (f genHelperDecoder) DecScratchBuffer() []byte {
 }
 
 // FOR USE BY CODECGEN ONLY. IT *WILL* CHANGE WITHOUT NOTICE. *DO NOT USE*
-func (f genHelperDecoder) DecScratchArrayBuffer() *[scratchByteArrayLen]byte {
+func (f genHelperDecoder) DecScratchArrayBuffer() *[decScratchByteArrayLen]byte {
 	return &f.d.b
 }
 
